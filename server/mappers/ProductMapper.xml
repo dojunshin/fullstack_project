@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="ProductMapper">
+  <select id="searchProducts" databaseId="mysql">
+    SELECT
+      product_id AS productId,
+      product_name AS productName,
+      price,
+      brand,
+      created_at AS createdAt
+    FROM products
+    WHERE product_name LIKE #{keywordLike}
+    ORDER BY product_id DESC
+    LIMIT #{limit} OFFSET #{offset}
+  </select>
+
+  <select id="searchProducts" databaseId="oracle">
+    SELECT *
+    FROM (
+      SELECT
+        product_id AS productId,
+        product_name AS productName,
+        price,
+        brand,
+        created_at AS createdAt,
+        ROW_NUMBER() OVER (ORDER BY product_id DESC) AS rn
+      FROM products
+      WHERE product_name LIKE #{keywordLike}
+    ) t
+    WHERE t.rn BETWEEN #{startRow} AND #{endRow}
+  </select>
+
+  <select id="findById">
+    SELECT
+      product_id AS productId,
+      product_name AS productName,
+      price,
+      brand,
+      created_at AS createdAt
+    FROM products
+    WHERE product_id = #{id}
+  </select>
+</mapper>
