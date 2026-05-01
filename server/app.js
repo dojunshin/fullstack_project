@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { getDbClientName } from './db/dbClient.js';
 import indexRouter from './Routes/index.js';
@@ -10,9 +11,10 @@ const app = express();
 const port = Number(process.env.PORT || 4000);
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173'
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000'
   })
 );
 

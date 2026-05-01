@@ -71,6 +71,18 @@ function parseMapperXml(xmlText) {
   for (const selectNode of toArray(mapper.select)) {
     registerStatement(namespace, 'select', selectNode);
   }
+
+  for (const insertNode of toArray(mapper.insert)) {
+    registerStatement(namespace, 'insert', insertNode);
+  }
+
+  for (const updateNode of toArray(mapper.update)) {
+    registerStatement(namespace, 'update', updateNode);
+  }
+
+  for (const deleteNode of toArray(mapper.delete)) {
+    registerStatement(namespace, 'delete', deleteNode);
+  }
 }
 
 export async function initializeXmlMappers(baseDir) {

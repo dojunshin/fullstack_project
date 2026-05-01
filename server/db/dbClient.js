@@ -7,6 +7,7 @@ const DB_CLIENT = (process.env.DB_CLIENT || 'mysql').toLowerCase();
 let mysqlPool;
 let oraclePool;
 let oracleDb;
+// 일단테스트....
 
 async function getMysqlPool() {
   if (mysqlPool) {

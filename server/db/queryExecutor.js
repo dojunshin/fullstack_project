@@ -58,3 +58,13 @@ export async function executeSelect(statementId, params = {}) {
   const { sql, bindings } = compileBindings(dbClientName, statement.sql, params);
   return queryWithDb(sql, bindings);
 }
+
+export async function executeStatement(statementId, params = {}) {
+  await initializeXmlMappers(mapperDir);
+
+  const dbClientName = getDbClientName();
+  const statement = getStatementById(statementId, dbClientName);
+
+  const { sql, bindings } = compileBindings(dbClientName, statement.sql, params);
+  return queryWithDb(sql, bindings);
+}

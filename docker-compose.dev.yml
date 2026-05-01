@@ -1,0 +1,37 @@
+# 개발 모드 오버라이드
+# 사용법: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+services:
+  server:
+    image: node:20-alpine
+    working_dir: /app
+    env_file:
+      - path: ./server/.env
+        required: false
+    environment:
+      DB_HOST: mysql
+      CLIENT_ORIGIN: http://localhost:3000
+    volumes:
+      - ./server:/app
+      - server_nm:/app/node_modules   # node_modules는 컨테이너 볼륨에 보존
+    command: sh -c "npm install && npx nodemon app.js"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+
+  client:
+    image: node:20-alpine
+    working_dir: /app
+    environment:
+      VITE_API_BASE_URL: http://localhost:4000
+    volumes:
+      - ./client:/app
+      - client_nm:/app/node_modules   # node_modules는 컨테이너 볼륨에 보존
+    command: sh -c "npm install && npx vite --host 0.0.0.0"
+    ports:
+      - "3000:3000"
+
+volumes:
+  server_nm:
+  client_nm:
