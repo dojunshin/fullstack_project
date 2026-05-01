@@ -7,7 +7,7 @@
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
   "forwardPorts": [3000, 4000, 3306],
-  "postCreateCommand": "apk add --no-cache git mysql-client && if [ ! -f /workspace/package.json ]; then git clone https://github.com/dojunshin/fullstack_project.git /tmp/repo && cp -r /tmp/repo/. /workspace/ && rm -rf /tmp/repo; fi && cd /workspace && npm install && cd client && npm install && cd ../server && npm install && (mysql -h mysql -uroot -prootpass test < /workspace/server/sql/products.mysql.sql 2>/dev/null || true)",
+  "postCreateCommand": "apk add --no-cache git mysql-client && if [ ! -f /workspace/package.json ]; then git clone https://github.com/dojunshin/fullstack_project.git /tmp/repo && cp -r /tmp/repo/. /workspace/ && rm -rf /tmp/repo; fi && cd /workspace && npm install && cd client && npm install && cd ../server && npm install && { [ -f /workspace/server/.env ] || cp /workspace/server/.env.example /workspace/server/.env; } && { [ -f /workspace/client/.env ] || cp /workspace/client/.env.example /workspace/client/.env; } && (mysql -h mysql -uroot -prootpass test < /workspace/server/sql/products.mysql.sql 2>/dev/null || true)",
   "customizations": {
     "vscode": {
       "extensions": [
