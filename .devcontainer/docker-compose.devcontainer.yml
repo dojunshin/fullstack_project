@@ -12,7 +12,6 @@ services:
       MYSQL_DATABASE: ${DB_NAME:-test}
     volumes:
       - mysql_data:/var/lib/mysql
-      - ../server/sql/products.mysql.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "3306:3306"
     healthcheck:
@@ -25,8 +24,6 @@ services:
     container_name: dojun_project
     image: node:20-alpine
     working_dir: /workspace
-    volumes:
-      - ..:/workspace
     command: sleep infinity   # VS Code가 연결을 유지하는 동안 대기
     depends_on:
       mysql:

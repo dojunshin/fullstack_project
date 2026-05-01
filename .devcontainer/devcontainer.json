@@ -7,7 +7,7 @@
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
   "forwardPorts": [3000, 4000, 3306],
-  "postCreateCommand": "apk add --no-cache git && npm install && cd client && npm install && cd ../server && npm install",
+  "postCreateCommand": "apk add --no-cache git mysql-client && npm install && cd client && npm install && cd ../server && npm install && (mysql -h mysql -uroot -prootpass test < /workspace/server/sql/products.mysql.sql 2>/dev/null || true)",
   "customizations": {
     "vscode": {
       "extensions": [
