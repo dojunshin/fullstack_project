@@ -28,7 +28,7 @@ services:
       DB_HOST: mysql
       CLIENT_ORIGIN: http://localhost:3000
     volumes:
-      - workspace_data:/workspace   # named volume: 로컬 폴더 삭제해도 유지
+      - ..:/workspace
     command: sleep infinity   # VS Code가 연결을 유지하는 동안 대기
     depends_on:
       mysql:
@@ -36,4 +36,3 @@ services:
 
 volumes:
   mysql_data:
-  workspace_data:
