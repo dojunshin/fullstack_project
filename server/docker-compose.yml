@@ -18,16 +18,24 @@ services:
   mysql:
     container_name: dojun_db_mysql
     image: mysql:8.0
+    # 맥북 M1/M2/M3 사용 시 무한 로딩 방지를 위해 플랫폼 명시
+    platform: linux/x86_64
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpass}
       MYSQL_DATABASE: ${DB_NAME:-test}
+      # MySQL 8.0의 바뀐 인증 방식을 DBeaver가 바로 인식하게 설정
+      MYSQL_TCP_PORT: 3306
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./sql/products.mysql.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p${DB_PASSWORD:-rootpass}"]
       interval: 10s
       timeout: 5s
       retries: 5
