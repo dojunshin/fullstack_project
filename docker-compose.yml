@@ -4,14 +4,15 @@ services:
   # ── MySQL ─────────────────────────────────────────────────
   mysql:
     container_name: dojun_db_mysql
-    image: mysql:8.0
+    build:
+      context: ./db
+      dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpass}
       MYSQL_DATABASE: ${DB_NAME:-test}
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./server/sql/products.mysql.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "3306:3306"
     healthcheck:
@@ -23,14 +24,15 @@ services:
   # ── Express API Server ────────────────────────────────────
   server:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: https://github.com/dojunshin/fullstack_project.git#main:server
+    container_name: dojun_server
     restart: unless-stopped
-    env_file:
-      - path: ./server/.env
-        required: false
     environment:
       DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-rootpass}
+      DB_NAME: ${DB_NAME:-test}
       CLIENT_ORIGIN: http://localhost
     depends_on:
       mysql:
@@ -41,10 +43,10 @@ services:
   # ── React Client (nginx) ──────────────────────────────────
   client:
     build:
-      context: ./client
-      dockerfile: Dockerfile
+      context: https://github.com/dojunshin/fullstack_project.git#main:client
       args:
         VITE_API_BASE_URL: ""   # nginx가 /api/* 를 server:4000 으로 프록시
+    container_name: dojun_client
     restart: unless-stopped
     depends_on:
       - server
